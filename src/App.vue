@@ -1,17 +1,31 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Gallery :dataGallery="this.dataGallery"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import Gallery from './components/Gallery.vue'
+import axios from 'axios'
 export default {
   name: 'App',
+  return:{
+    dataGallery:null
+  },
   components: {
-    HelloWorld
+    Gallery
+  },
+  mounted() {
+    this.getData();
+  },
+  methods: {
+    getData() {
+        axios.get('https://jsonplaceholder.typicode.com/albums/1/photos')
+        .then (response => {
+            this.dataGallery = response.data                       
+        })
+        .catch (e=>console.log(e))
+    }
   }
 }
 </script>
