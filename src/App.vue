@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Gallery :dataGallery="this.dataGallery"/>
+    <Gallery :data="dataGallery"/>
   </div>
 </template>
 
@@ -9,8 +9,10 @@ import Gallery from './components/Gallery.vue'
 import axios from 'axios'
 export default {
   name: 'App',
-  return:{
-    dataGallery:null
+  data() {
+    return {
+        dataGallery:null
+    }
   },
   components: {
     Gallery
@@ -29,14 +31,3 @@ export default {
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
