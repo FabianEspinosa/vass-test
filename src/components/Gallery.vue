@@ -35,9 +35,9 @@
                 <b-button :class="{active : allActive}" class="filterButton" @click="activeAll">todos</b-button>
                 <b-button :class="{active : oddActive}" class="filterButton" @click="toogleOdd">Impares</b-button>
         </div>
-        <div class="gallery">     
+        <div  class="gallery">     
             <div class="gallery-panel"
-                v-for="photo in data"
+                v-for="photo in dataComplete"
                 :key="photo.id">
                 <img :src="photo.url" style="width:100%">{{photo.id}}
             </div>
@@ -62,19 +62,23 @@ export default {
         pairActive:false,
         oddActive:false,
         allActive:true,
-        dataComplete: null
+        dataComplete:[]
     }
   },
   props: ['data'],
-  mounted() {
+  mounted() {   
     this.dataComplete = this.data;
   },
   methods: {
     tooglePair: function () {        
         this.pairActive = !this.pairActive
+        this.oddActive = false
+        this.allActive = false
     },
     toogleOdd: function () {        
         this.oddActive = !this.oddActive
+        this.allActive = false
+        this.pairActive = false
     }, 
     activeAll: function () {        
         this.oddActive = false
@@ -83,25 +87,28 @@ export default {
     }  
   },
   watch:{
-    pairActive: function() {
-        this.data = this.dataComplete;
+    pairActive: function() {        
         if (this.pairActive) {
             this.allActive = false           
-            this.data = this.data.filter(data => data.id % 2 == 0)
+            this.dataComplete = this.data.filter(data => data.id % 2 == 0)
         }
         if (!this.pairActive && !this.oddActive) {
             this.allActive = true
         }    
     },
-    oddActive: function() {
-        this.data = this.dataComplete;
+    oddActive: function() {        
         if (this.oddActive) {
             this.allActive = false            
-            this.data = this.data.filter(data => data.id % 2 != 0)
+            this.dataComplete = this.data.filter(data => data.id % 2 == 1)
         }
         if (!this.pairActive && !this.oddActive) {
             this.allActive = true
         }        
+    },
+    allActive: function() {        
+        if (this.allActive) {
+            this.dataComplete = this.data
+        }      
     }
   }
 
