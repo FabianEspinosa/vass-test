@@ -30,11 +30,16 @@
                 <b-button class="barButton" type="is-ghost">Photography</b-button>           
                 <b-button class="barButton" type="is-ghost">App</b-button>          
         </div>
-        <div class="gallery">
+        <div class="filterButtons"> 
+                <b-button :class="{active : pairActive}" class="filterButton" @click="tooglePair">Pares</b-button>
+                <b-button :class="{active : allActive}" class="filterButton" @click="activeAll">todos</b-button>
+                <b-button :class="{active : oddActive}" class="filterButton" @click="toogleOdd">Impares</b-button>
+        </div>
+        <div class="gallery">     
             <div class="gallery-panel"
                 v-for="photo in data"
                 :key="photo.id">
-                <img :src="photo.url" style="width:100%"> {{photo.id}}
+                <img :src="photo.url" style="width:100%">{{photo.id}}
             </div>
         </div>
         <div class="foots">
@@ -52,7 +57,53 @@
 <script>
 export default {
   name: 'Gallery',
-  props: ['data'] 
+  data() {
+    return {
+        pairActive:false,
+        oddActive:false,
+        allActive:true,
+        dataComplete: null
+    }
+  },
+  props: ['data'],
+  mounted() {
+    this.dataComplete = this.data;
+  },
+  methods: {
+    tooglePair: function () {        
+        this.pairActive = !this.pairActive
+    },
+    toogleOdd: function () {        
+        this.oddActive = !this.oddActive
+    }, 
+    activeAll: function () {        
+        this.oddActive = false
+        this.pairActive = false
+        this.allActive = true
+    }  
+  },
+  watch:{
+    pairActive: function() {
+        this.data = this.dataComplete;
+        if (this.pairActive) {
+            this.allActive = false           
+            this.data = this.data.filter(data => data.id % 2 == 0)
+        }
+        if (!this.pairActive && !this.oddActive) {
+            this.allActive = true
+        }    
+    },
+    oddActive: function() {
+        this.data = this.dataComplete;
+        if (this.oddActive) {
+            this.allActive = false            
+            this.data = this.data.filter(data => data.id % 2 != 0)
+        }
+        if (!this.pairActive && !this.oddActive) {
+            this.allActive = true
+        }        
+    }
+  }
 
 }
 </script>
@@ -153,6 +204,18 @@ export default {
       height: 22vw;
       object-fit: cover;      
     }
+    .filterButtons {
+        display: flex;
+        justify-content: center;
+        .filterButton {
+            width: 90.31px;
+            border-radius: 0%;
+        }
+        .active {
+            background-color: #FC758C;
+            color: #fff!important;
+        }
+    }
     .foots {
         display: flex;
         justify-content: center;
@@ -176,5 +239,8 @@ export default {
             letter-spacing: 3px;
             margin-bottom: 30px;
         }
+    }
+    .button:focus, .button.is-focused {
+        border-color: #fff!important;   
     }
 </style>
